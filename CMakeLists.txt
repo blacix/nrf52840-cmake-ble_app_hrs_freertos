@@ -10,7 +10,7 @@ cmake_minimum_required (VERSION 3.6)
 include(nRF5-cmake.cmake)
 include(nRF5-libraries.cmake)
 
-set(PROJECT_NAME ble_app_hrs_freertos)
+set(PROJECT_NAME nrf52840-cmake-ble_app_hrs_freertos)
 
 project ("${PROJECT_NAME}" ) # LANGUAGES C CXX ASM
 # w/o setting the language, linker fails, because the startup file (.S) is not processed
