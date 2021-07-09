@@ -12,10 +12,11 @@ include(nRF5-libraries.cmake)
 
 set(PROJECT_NAME nrf52840-cmake-ble_app_hrs_freertos)
 
-project ("${PROJECT_NAME}" ) # LANGUAGES C CXX ASM
+project ("${PROJECT_NAME}")
 # w/o setting the language, linker fails, because the startup file (.S) is not processed
 enable_language(CXX ASM)
 
+# TODO toolchain file
 set(ARM_TOOLCHAIN_PATH "c:/Program Files (x86)/GNU Tools Arm Embedded/7 2018-q2-update/bin")
 set(ARM_TOOLCHAIN_PREFIX arm-none-eabi-)
 
@@ -27,68 +28,33 @@ set(CMAKE_ASM_COMPILER ${ARM_TOOLCHAIN_PATH}/${ARM_TOOLCHAIN_PREFIX}gcc)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(SDK_ROOT ${CMAKE_SOURCE_DIR}/nRF5_SDK_15.3.0_59ac345)
-set(PROJ_DIR "${CMAKE_SOURCE_DIR}")
 
+# configure nRF5 SDK version
+# nRF5_SDK_15.3.0_59ac345 comes with softdevice 6.1.1
+# nRF5_SDK_16.0.0_98a08e2 comes with softdevice 7.0.1
+set(SDK_ROOT ${CMAKE_SOURCE_DIR}/nRF5_SDK_16.0.0_98a08e2)
+set(PROJ_DIR "${CMAKE_SOURCE_DIR}")
+# -DNRF_SD_BLE_API_VERSION must correspond to the major version number of the softdevice in use.
+set(NRF5_NRF_SD_BLE_API_VERSION 7)
+set(NRF5_SOFT_DEVICE_VERSION "7.0.1")
 
 # add NRF SDK libraries and components
 nRF5_addCommon()
 nRF5_addSeggerRTT()
-# nRF5_addUART()
-# nRF5_addPRS()
 nRF5_addAppUART()
-# nRF5_addMemobj()
-# nRF5_addStrError()
-# nRF5_addAppError()
-# nRF5_addRingBuf()
-# nRF5_addLog() # adds fprintf
-# nRF5_addAtomicFlags()
-# nRF5_addAtomic()
-# nRF5_addSoftDeviceSupport()
 nRF5_addBLEGATT(TRUE)
 nRF5_addFreeRTOS(1)
-# nRF5_addFDS()
 nRF5_addBLEPeerManager()
 nRF5_addBLEAdvertising()
 nRF5_addBLELinkCtxManager()
 nRF5_addBLEQWR()
-# nRF5_addGPIOTE()
 nRF5_addAppButton()
 nRF5_addHardfaultHandler()
-# nRF5_addCRC32()
 nRF5_addMutex()
-# nRF5_addQueue()
-# nRF5_addNFC()
-# nRF5_addCryptoCommon()
 nRF5_addBSP(TRUE FALSE FALSE)
-# nRF5_addAppScheduler()
-# nRF5_addBalloc()
-# nRF5_addBootloaderSettings()
-
-#nRF5_addBLEService(ble_ancs_c)
-#nRF5_addBLEService(ble_ias_c)
-#nRF5_addBLEService(ble_gls)
-#nRF5_addBLEService(ble_bas_c)
 nRF5_addBLEService(ble_bas)
-# nRF5_addBLEService(ble_hrs_c)
-#nRF5_addBLEService(ble_rscs_c)
-#nRF5_addBLEService(ble_lls)
-#nRF5_addBLEService(ble_nus_c)
-#nRF5_addBLEService(ble_ias)
-
-# nRF5_addBLEService(ble_dfu)
-
-#nRF5_addBLEService(ble_lbs)
-#nRF5_addBLEService(ble_hts)
-#nRF5_addBLEService(ble_cscs)
-#nRF5_addBLEService(ble_cts_c)
-#nRF5_addBLEService(ble_nus)
-#nRF5_addBLEService(ble_hids)
-#nRF5_addBLEService(ble_tps)
 nRF5_addBLEService(ble_dis)
-#nRF5_addBLEService(ble_lbs_c)
 nRF5_addBLEService(ble_hrs)
-#nRF5_addBLEService(ble_rscs)
 
 
 # Includes
@@ -133,7 +99,7 @@ add_definitions(
         -DFLOAT_ABI_HARD
         -DFREERTOS
         -DNRF52840_XXAA
-        -DNRF_SD_BLE_API_VERSION=6
+        -DNRF_SD_BLE_API_VERSION=${NRF5_NRF_SD_BLE_API_VERSION}
         -DS140
         -DSOFTDEVICE_PRESENT
         -D__HEAP_SIZE=1024
@@ -166,7 +132,7 @@ add_custom_target(flash DEPENDS ${target_name}
 )
 
 add_custom_target(flash_softdevice
-        COMMAND ${NRFJPROG} -f nrf52 --program ${SDK_ROOT}/components/softdevice/s140/hex/s140_nrf52_6.1.1_softdevice.hex --sectorerase
+        COMMAND ${NRFJPROG} -f nrf52 --program ${SDK_ROOT}/components/softdevice/s140/hex/s140_nrf52_${NRF5_SOFT_DEVICE_VERSION}_softdevice.hex --sectorerase
         COMMAND ${NRFJPROG} -f nrf52 --reset
 )
 
