@@ -7,8 +7,8 @@ cmake_minimum_required (VERSION 3.6)
 
 # CMAKE_SYSTEM_NAME should be set to "Generic" before project
 # it is set in nRF5-cmake.cmake
-include(nRF5-cmake.cmake)
-include(nRF5-libraries.cmake)
+include(cmake/nRF5-cmake.cmake)
+include(cmake/nRF5-libraries.cmake)
 
 set(PROJECT_NAME nrf52840-cmake-ble_app_hrs_freertos)
 
@@ -28,12 +28,10 @@ set(CMAKE_ASM_COMPILER ${ARM_TOOLCHAIN_PATH}/${ARM_TOOLCHAIN_PREFIX}gcc)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
 # configure nRF5 SDK version
 # nRF5_SDK_15.3.0_59ac345 comes with softdevice 6.1.1
 # nRF5_SDK_16.0.0_98a08e2 comes with softdevice 7.0.1
 set(SDK_ROOT ${CMAKE_SOURCE_DIR}/nRF5_SDK_16.0.0_98a08e2)
-set(PROJ_DIR "${CMAKE_SOURCE_DIR}")
 # -DNRF_SD_BLE_API_VERSION must correspond to the major version number of the softdevice in use.
 set(NRF5_NRF_SD_BLE_API_VERSION 7)
 set(NRF5_SOFT_DEVICE_VERSION "7.0.1")
@@ -57,20 +55,19 @@ nRF5_addBLEService(ble_dis)
 nRF5_addBLEService(ble_hrs)
 
 
-# Includes
+# application files
+set(APP_SOURCES_DIR ${CMAKE_SOURCE_DIR}/src)
+# include paths
 list(APPEND APP_INCLUDES
-        "${PROJ_DIR}/config")
-
+        "${APP_SOURCES_DIR}/config")
 include_directories(
         # app includes must come first, see makefile, too. otherwise FreeRTOS won't compile
         ${APP_INCLUDES}
         ${NRF5_SDK_INCLUDES}
 )
-
-
 # application sources
 list(APPEND APP_SOURCE_FILES
-        "${PROJ_DIR}/main.cpp")
+        "${APP_SOURCES_DIR}/main.cpp")
 
 
 # linker script file
@@ -89,6 +86,7 @@ set(LIB_FILES "-lc -lnosys -lm")
 set(CMAKE_C_FLAGS "${COMMON_FLAGS} ${CPU_FLAGS} ${OPT_FLAGS}")
 set(CMAKE_CXX_FLAGS "${COMMON_FLAGS} ${CPU_FLAGS} ${OPT_FLAGS}")
 set(CMAKE_ASM_FLAGS "${ASM_FLAGS}")
+# Comment from Makefile:
 # Add standard libraries at the very end of the linker input, after all objects
 # that may need symbols provided by these libraries.
 set(CMAKE_EXE_LINKER_FLAGS "${OPT_FLAGS} -mthumb -mabi=aapcs -L${SDK_ROOT}/modules/nrfx/mdk -T${NRF52_LINKER_SCRIPT} ${CPU_FLAGS} -Wl,--gc-sections --specs=nano.specs ${LIB_FILES}")
@@ -137,7 +135,7 @@ add_custom_target(flash_softdevice
 )
 
 # sdk_config tool
-set(SDK_CONFIG_FILE  "${PROJ_DIR}/config/sdk_config.h")
+set(SDK_CONFIG_FILE  "${CMAKE_SOURCE_DIR}/config/sdk_config.h")
 set(CMSIS_CONFIG_TOOL "${SDK_ROOT}/external_tools/cmsisconfig/CMSIS_Configuration_Wizard.jar")
 add_custom_target(sdk_config
         java -jar ${CMSIS_CONFIG_TOOL} ${SDK_CONFIG_FILE}
