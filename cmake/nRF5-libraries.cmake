@@ -466,9 +466,8 @@ macro(nRF5_addLog)
 
     list(APPEND NRF5_SDK_INCLUDES
             "${SDK_ROOT}/external/fprintf"
-            "${SDK_ROOT}/components/libraries/log/include"
-            # old SDK
             "${SDK_ROOT}/components/libraries/log"
+            "${SDK_ROOT}/components/libraries/log/include"
             )
 
     list(APPEND NRF5_SDK_SOURCE_FILES
@@ -576,9 +575,9 @@ macro(nRF5_addLegacyUART)
 endmacro()
 
 # adds serial library
-# TODO use nrfx drivers instead of legacy drivers
 macro(nRF5_addSerial)
-    nRF5_addLegacyUART()
+    #nRF5_addLegacyUART()
+    nRF5_addUART()
     nRF5_addMutex()
     nRF5_addQueue()
     nRF5_addAppTimer()
