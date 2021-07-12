@@ -105,17 +105,17 @@ add_definitions(
 
 
 # binary targer
-set(target_name ${PROJECT_NAME})
-add_executable(${target_name} ${NRF5_SDK_SOURCE_FILES} ${APP_SOURCE_FILES})
-set_target_properties(${target_name} PROPERTIES SUFFIX ".out")
-set_target_properties(${target_name} PROPERTIES LINK_FLAGS "-Wl,-Map=${target_name}.map")
+set(TARGET_NAME ${PROJECT_NAME})
+add_executable(${TARGET_NAME} ${NRF5_SDK_SOURCE_FILES} ${APP_SOURCE_FILES})
+set_target_properties(${TARGET_NAME} PROPERTIES SUFFIX ".out")
+set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS "-Wl,-Map=${TARGET_NAME}.map")
 
-add_custom_command(TARGET ${target_name}
+add_custom_command(TARGET ${TARGET_NAME}
         POST_BUILD
-        COMMAND ${ARM_TOOLCHAIN_PATH}/arm-none-eabi-size ${target_name}.out
-        COMMAND ${ARM_TOOLCHAIN_PATH}/arm-none-eabi-objcopy -O binary ${target_name}.out "${target_name}.bin"
-        COMMAND ${ARM_TOOLCHAIN_PATH}/arm-none-eabi-objcopy -O ihex ${target_name}.out "${target_name}.hex"
-        COMMENT "post build steps for ${target_name}")
+        COMMAND ${ARM_TOOLCHAIN_PATH}/arm-none-eabi-size ${TARGET_NAME}.out
+        COMMAND ${ARM_TOOLCHAIN_PATH}/arm-none-eabi-objcopy -O binary ${TARGET_NAME}.out "${TARGET_NAME}.bin"
+        COMMAND ${ARM_TOOLCHAIN_PATH}/arm-none-eabi-objcopy -O ihex ${TARGET_NAME}.out "${TARGET_NAME}.hex"
+        COMMENT "post build steps for ${TARGET_NAME}")
 
 
 # custom targets
@@ -123,8 +123,8 @@ add_custom_target(erase_all
         COMMAND ${NRFJPROG} -f nrf52 --eraseall
 )
 
-add_custom_target(flash DEPENDS ${target_name}
-        COMMAND ${NRFJPROG} -f nrf52 --program "${target_name}.hex" --sectorerase
+add_custom_target(flash DEPENDS ${TARGET_NAME}
+        COMMAND ${NRFJPROG} -f nrf52 --program "${TARGET_NAME}.hex" --sectorerase
         COMMAND ${NRFJPROG} -f nrf52 --reset
 )
 
