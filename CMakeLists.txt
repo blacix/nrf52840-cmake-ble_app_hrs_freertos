@@ -12,12 +12,18 @@ include(cmake/nRF5-libraries.cmake)
 
 set(PROJECT_NAME nrf52840-cmake-ble_app_hrs_freertos)
 
+# for cross compiling
+# prevents "arm-none-eabi-gcc is not able to compile a simple test program" error message
+# must come before call to project()
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+
 project ("${PROJECT_NAME}")
 # w/o setting the language, linker fails, because the startup file (.S) is not processed
 enable_language(CXX ASM)
 
 # TODO toolchain file
 set(ARM_TOOLCHAIN_PATH "c:/Program Files (x86)/GNU Tools Arm Embedded/7 2018-q2-update/bin")
+# set(ARM_TOOLCHAIN_PATH "c:/Program Files (x86)/GNU Arm Embedded Toolchain/9 2020-q2-update/bin")
 set(ARM_TOOLCHAIN_PREFIX arm-none-eabi-)
 
 set(CMAKE_C_COMPILER ${ARM_TOOLCHAIN_PATH}/${ARM_TOOLCHAIN_PREFIX}gcc)
