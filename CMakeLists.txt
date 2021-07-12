@@ -95,7 +95,6 @@ add_definitions(
         -DBOARD_PCA10056
         -DCONFIG_GPIO_AS_PINRESET
         -DFLOAT_ABI_HARD
-        -DFREERTOS
         -DNRF52840_XXAA
         -DNRF_SD_BLE_API_VERSION=${NRF5_NRF_SD_BLE_API_VERSION}
         -DS140

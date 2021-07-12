@@ -722,6 +722,8 @@ macro(nRF5_addFreeRTOS RTOS_HEAP_VERSION)
             "${SDK_ROOT}/components/softdevice/common/nrf_sdh_freertos.c"
             )
 
+    add_definitions(-DFREERTOS)
+
 endmacro()
 
 # adds app UART library
