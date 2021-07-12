@@ -10,30 +10,31 @@ macro(nRF5_addCommon)
             "${SDK_ROOT}/modules/nrfx/hal"
             "${SDK_ROOT}/modules/nrfx/drivers/include"
             "${SDK_ROOT}/integration/nrfx"
-            "${SDK_ROOT}/integration/nrfx/legacy"
+            #"${SDK_ROOT}/integration/nrfx/legacy"
 
             "${SDK_ROOT}/components"
-            "${SDK_ROOT}/components/libraries/pwm"
-            "${SDK_ROOT}/components/libraries/usbd"
-            "${SDK_ROOT}/components/libraries/usbd/class/audio"
-            "${SDK_ROOT}/components/libraries/usbd/class/cdc"
-            "${SDK_ROOT}/components/libraries/usbd/class/cdc/acm"
-            "${SDK_ROOT}/components/libraries/usbd/class/msc"
-            "${SDK_ROOT}/components/libraries/usbd/class/hid"
-            "${SDK_ROOT}/components/libraries/usbd/class/hid/generic"
-            "${SDK_ROOT}/components/libraries/usbd/class/hid/mouse"
-            "${SDK_ROOT}/components/libraries/usbd/class/hid/kbd"
+            #"${SDK_ROOT}/components/libraries/pwm"
+            #"${SDK_ROOT}/components/libraries/low_power_pwm"
+
+            #"${SDK_ROOT}/components/libraries/usbd"
+            #"${SDK_ROOT}/components/libraries/usbd/class/audio"
+            #"${SDK_ROOT}/components/libraries/usbd/class/cdc"
+            #"${SDK_ROOT}/components/libraries/usbd/class/cdc/acm"
+            #"${SDK_ROOT}/components/libraries/usbd/class/msc"
+            #"${SDK_ROOT}/components/libraries/usbd/class/hid"
+            #"${SDK_ROOT}/components/libraries/usbd/class/hid/generic"
+            #"${SDK_ROOT}/components/libraries/usbd/class/hid/mouse"
+            #"${SDK_ROOT}/components/libraries/usbd/class/hid/kbd"
 
             "${SDK_ROOT}/components/libraries/mpu"
             #"${SDK_ROOT}/components/libraries/experimental_section_vars"
 
-            "${SDK_ROOT}/components/libraries/slip"
+            #"${SDK_ROOT}/components/libraries/slip"
             "${SDK_ROOT}/components/libraries/delay"
-            "${SDK_ROOT}/components/libraries/csense_drv"
-            "${SDK_ROOT}/components/libraries/low_power_pwm"
+            #"${SDK_ROOT}/components/libraries/csense_drv"
+
             "${SDK_ROOT}/components/libraries/fstorage"
             "${SDK_ROOT}/components/libraries/bootloader/ble_dfu"
-            #"${SDK_ROOT}/components/libraries/experimental_task_manager"
 
             "${SDK_ROOT}/components/softdevice/s140/headers"
             "${SDK_ROOT}/components/softdevice/s140/headers/nrf52"
@@ -48,13 +49,11 @@ macro(nRF5_addCommon)
             "${SDK_ROOT}/components/libraries/hci"
 
             "${SDK_ROOT}/components/libraries/sortlist"
-            "${SDK_ROOT}/components/libraries/spi_mngr"
+            #"${SDK_ROOT}/components/libraries/spi_mngr"
             "${SDK_ROOT}/components/libraries/led_softblink"
             "${SDK_ROOT}/components/libraries/sdcard"
-            "${SDK_ROOT}/components/libraries/twi_mngr"
             "${SDK_ROOT}/components/libraries/sensorsim"
-            "${SDK_ROOT}/components/libraries/gfx"
-            "${SDK_ROOT}/components/libraries/twi_sensor"
+            #"${SDK_ROOT}/components/libraries/gfx"
             "${SDK_ROOT}/components/libraries/stack_guard"
             "${SDK_ROOT}/components/libraries/log/src"
 
@@ -64,8 +63,9 @@ macro(nRF5_addCommon)
     list(APPEND NRF5_SDK_SOURCE_FILES
             "${SDK_ROOT}/modules/nrfx/mdk/gcc_startup_nrf52840.S"
             "${SDK_ROOT}/modules/nrfx/mdk/system_nrf52840.c"
-            "${SDK_ROOT}/integration/nrfx/legacy/nrf_drv_clock.c"
             "${SDK_ROOT}/modules/nrfx/drivers/src/nrfx_clock.c"
+            # it seems that CMSIS uses legacy drivers
+            "${SDK_ROOT}/integration/nrfx/legacy/nrf_drv_clock.c"
 
             "${SDK_ROOT}/components/libraries/util/app_util_platform.c"
             "${SDK_ROOT}/components/libraries/util/nrf_assert.c"
@@ -576,6 +576,7 @@ macro(nRF5_addLegacyUART)
 endmacro()
 
 # adds serial library
+# TODO use nrfx drivers instead of legacy drivers
 macro(nRF5_addSerial)
     nRF5_addLegacyUART()
     nRF5_addMutex()
