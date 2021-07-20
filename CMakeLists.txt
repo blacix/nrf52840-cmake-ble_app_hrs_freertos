@@ -3,41 +3,30 @@
 # https://github.com/zl3one6/nRF52xCLion/blob/master/examples/ble_peripheral/ble_app_hrs/pca10056/s140/armgcc/CMakeLists.txt
 # https://devzone.nordicsemi.com/f/nordic-q-a/38301/a-unofficial-tutorial-for-building-nrf52-project-in-clion
 
-cmake_minimum_required (VERSION 3.6)
+cmake_minimum_required (VERSION 3.20)
 
-# CMAKE_SYSTEM_NAME should be set to "Generic" before project
-# it is set in nRF5-cmake.cmake
 include(cmake/nRF5-cmake.cmake)
 include(cmake/nRF5-libraries.cmake)
 
 set(PROJECT_NAME nrf52840-cmake-ble_app_hrs_freertos)
 
-# for cross compiling
-# prevents "arm-none-eabi-gcc is not able to compile a simple test program" error message
-# must come before call to project()
-set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 
 project ("${PROJECT_NAME}")
 # w/o setting the language, linker fails, because the startup file (.S) is not processed
 enable_language(CXX ASM)
 
-# TODO toolchain file
-set(ARM_TOOLCHAIN_PATH "c:/Program Files (x86)/GNU Tools Arm Embedded/7 2018-q2-update/bin")
-# set(ARM_TOOLCHAIN_PATH "c:/Program Files (x86)/GNU Arm Embedded Toolchain/9 2020-q2-update/bin")
-set(ARM_TOOLCHAIN_PREFIX arm-none-eabi-)
-
-set(CMAKE_C_COMPILER ${ARM_TOOLCHAIN_PATH}/${ARM_TOOLCHAIN_PREFIX}gcc)
-set(CMAKE_CXX_COMPILER ${ARM_TOOLCHAIN_PATH}/${ARM_TOOLCHAIN_PREFIX}g++)
-set(CMAKE_ASM_COMPILER ${ARM_TOOLCHAIN_PATH}/${ARM_TOOLCHAIN_PREFIX}gcc)
-
-# set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(NOT EXISTS ${CMAKE_SOURCE_DIR}/nRF5_SDK)
+file(DOWNLOAD https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v16.x.x/nRF5_SDK_16.0.0_98a08e2.zip ${CMAKE_SOURCE_DIR}/nRF5_SDK.zip)
+file(ARCHIVE_EXTRACT INPUT ${CMAKE_SOURCE_DIR}/nRF5_SDK.zip
+     DESTINATION ${CMAKE_SOURCE_DIR}/nRF5_SDK)
+endif()	 
 
 # configure nRF5 SDK version
 # nRF5_SDK_15.3.0_59ac345 comes with softdevice 6.1.1
 # nRF5_SDK_16.0.0_98a08e2 comes with softdevice 7.0.1
-set(SDK_ROOT ${CMAKE_SOURCE_DIR}/nRF5_SDK_16.0.0_98a08e2)
+set(SDK_ROOT ${CMAKE_SOURCE_DIR}/nRF5_SDK)
 # -DNRF_SD_BLE_API_VERSION must correspond to the major version number of the softdevice in use.
 set(NRF5_NRF_SD_BLE_API_VERSION 7)
 set(NRF5_SOFT_DEVICE_VERSION "7.0.1")
@@ -118,9 +107,9 @@ set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS "-Wl,-Map=${TARGET_NA
 
 add_custom_command(TARGET ${TARGET_NAME}
         POST_BUILD
-        COMMAND ${ARM_TOOLCHAIN_PATH}/arm-none-eabi-size ${TARGET_NAME}.out
-        COMMAND ${ARM_TOOLCHAIN_PATH}/arm-none-eabi-objcopy -O binary ${TARGET_NAME}.out "${TARGET_NAME}.bin"
-        COMMAND ${ARM_TOOLCHAIN_PATH}/arm-none-eabi-objcopy -O ihex ${TARGET_NAME}.out "${TARGET_NAME}.hex"
+        COMMAND ${ARM_TOOLCHAIN_DIR}/arm-none-eabi-size ${TARGET_NAME}.out
+        COMMAND ${ARM_TOOLCHAIN_DIR}/arm-none-eabi-objcopy -O binary ${TARGET_NAME}.out "${TARGET_NAME}.bin"
+        COMMAND ${ARM_TOOLCHAIN_DIR}/arm-none-eabi-objcopy -O ihex ${TARGET_NAME}.out "${TARGET_NAME}.hex"
         COMMENT "post build steps for ${TARGET_NAME}")
 
 

@@ -31,7 +31,3 @@ endif ()
 if (NOT NRFUTIL)
     message(FATAL_ERROR "The path to the nrfutil utility (NRFUTIL) must be set.")
 endif ()
-
-# must be set before project, otherwise causes linking issues
-set(CMAKE_SYSTEM_NAME "Generic")
-set(CMAKE_SYSTEM_PROCESSOR "ARM")
