@@ -8,8 +8,8 @@ Download install and add to path:
 https://www.nordicsemi.com/Products/Development-tools/nRF-Command-Line-Tools/Download
 
 Install nrfutil:
--install python 3.7 or later.
--pip install nrfutil
+- install python 3.7 or later.
+- pip install nrfutil
 
 # Build App
 mkdir build
