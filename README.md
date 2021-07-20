@@ -13,6 +13,6 @@ Install nrfutil:
 
 # Build App
 mkdir build
-cd build 
+cd build
 cmake -DCMAKE_TOOLCHAIN_FILE:=../cmake/tc_arm-none-eabi-gcc.cmake .. -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" ..
 cmake --build .
